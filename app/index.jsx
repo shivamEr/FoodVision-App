@@ -2,9 +2,34 @@ import { Dimensions, Image, Text, View } from "react-native";
 import Colors from '../shared/Colors'
 import Button from './../components/shared/Button'
 import { useRouter } from "expo-router";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import { useConvex } from "convex/react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../services/FirebasConfig";
+import { api } from "../convex/_generated/api";
+import { useEffect } from "react";
 
 export default function Index() {
   const router = useRouter();
+  const { user, setUser } = useContext(UserContext);
+  const convex = useConvex();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (userInfo) => {
+      console.log(userInfo?.email);
+      const userData = await convex.query(api.Users.GetUser, {
+        email: userInfo?.email
+      });
+
+      console.log("Convex signIn:", userData);
+      setUser(userData);
+    })
+
+    return () => unsubscribe();
+  }, [])
+
+
   return (
     <View
       style={{
@@ -55,13 +80,13 @@ export default function Index() {
       </View>
 
       <View style={{
-        position:'absolute',
-        width:"100%",
+        position: 'absolute',
+        width: "100%",
         bottom: 50,
         padding: 20
       }}>
         <Button title={'Get Started'}
-        onPress={() => router.push('/auth/SignIn')}
+          onPress={() => router.push('/auth/SignIn')}
         />
       </View>
     </View>
