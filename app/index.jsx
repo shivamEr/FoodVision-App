@@ -17,13 +17,20 @@ export default function Index() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (userInfo) => {
-      console.log(userInfo?.email);
+      try {
+        console.log(userInfo?.email);
       const userData = await convex.query(api.Users.GetUser, {
         email: userInfo?.email
       });
 
       console.log("Convex signIn:", userData);
       setUser(userData);
+      router.replace('/(tabs)/Home');
+      }
+      catch (error) {
+        console.error("Error fetching user data:", error);
+        // router.replace('/auth/SignIn');
+      }
     })
 
     return () => unsubscribe();
