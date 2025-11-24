@@ -8,12 +8,12 @@ export default defineSchema({
         picture: v.optional(v.string()),
         subscriptionId: v.optional(v.string()),
         credits: v.number(),
-        height: v.optional(v.float64()),
-        weight: v.optional(v.float64()),
+        height: v.optional(v.string()),
+        weight: v.optional(v.string()),
         age: v.optional(v.string()),
         gender: v.optional(v.string()),
         activityLevel: v.optional(v.string()),
-        goals: v.optional(v.string()),
+        goal: v.optional(v.string()),
 
     })
 })

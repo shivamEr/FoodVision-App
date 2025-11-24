@@ -1,20 +1,46 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from "react-native";
 import Button from "../../components/shared/Button";
 import Input from "../../components/shared/Input";
+import { useMutation } from 'convex/react'
+import { api } from './../../convex/_generated/api'
+import { useRouter } from "expo-router";
+import { UserContext } from './../../context/UserContext'
 
 export default function Preference() {
   const [weight, setWeight] = useState(null);
   const [height, setHeight] = useState(null);
   const [gender, setGender] = useState(null);
   const [goal, setGoal] = useState(null);
+  const { user, setUser } = useContext(UserContext)
+  const router = useRouter();
+  const UpdateUserPref = useMutation(api.Users.UpdateUserPref)
 
-  const onContinue = () => {
+  const onContinue = async () => {
+    console.log("clicked")
     if(!weight || !height || !gender || !goal) {
       Alert.alert("Missing Fields!","Please fill all the fields");
       return;
     }
 
+    const data = {
+      uid: user?._id,
+      weight:weight,
+      height: height,
+      gender: gender,
+      goal: goal
+    }
+
+    const result = await UpdateUserPref({
+      ...data
+    })
+    console.log("Update", data)
+    setUser(prev=>({
+      ...prev,
+      ...data
+    }))
+    router.replace('/(tabs)/Home')
+    return result;
   }
 
   return (
