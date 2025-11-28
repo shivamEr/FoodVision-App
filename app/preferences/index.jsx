@@ -6,6 +6,8 @@ import { useMutation } from 'convex/react'
 import { api } from './../../convex/_generated/api'
 import { useRouter } from "expo-router";
 import { UserContext } from './../../context/UserContext'
+import { calculateCaloriesAI } from "../../services/AiModel";
+import Prompt from "../../shared/Prompt";
 
 export default function Preference() {
   const [weight, setWeight] = useState(null);
@@ -18,24 +20,33 @@ export default function Preference() {
 
   const onContinue = async () => {
     console.log("clicked")
-    if(!weight || !height || !gender || !goal) {
-      Alert.alert("Missing Fields!","Please fill all the fields");
+    if (!weight || !height || !gender || !goal) {
+      Alert.alert("Missing Fields!", "Please fill all the fields");
       return;
     }
 
     const data = {
       uid: user?._id,
-      weight:weight,
+      weight: weight,
       height: height,
       gender: gender,
       goal: goal
     }
 
+    // ** CAlORIES AND PROTEIN CALCULATING VIA AI **
+    const PROMPT = JSON.stringify(data) + " " + Prompt.CALORIES_PROMPT;
+    // console.log(PROMPT)
+    const AIResult = await calculateCaloriesAI(PROMPT);
+    // console.log("Ai result = ", AIResult)
+    const JSONContent = JSON.parse(AIResult.replace('```json', '').replace('```', ''));
+    // console.log(JSONContent)
+
     const result = await UpdateUserPref({
-      ...data
+      ...data,
+      ...JSONContent
     })
     console.log("Update", data)
-    setUser(prev=>({
+    setUser(prev => ({
       ...prev,
       ...data
     }))
@@ -54,11 +65,11 @@ export default function Preference() {
 
       {/* Weight + Height */}
       <View style={styles.row}>
-        <View style={{flex: 1}}>
-            <Input placeholder={"e.g 70"} onChangeText={setWeight} label="Weight (kg)"/>
+        <View style={{ flex: 1 }}>
+          <Input placeholder={"e.g 70"} onChangeText={setWeight} label="Weight (kg)" />
         </View>
-        <View style={{flex: 1}}>
-            <Input placeholder={"e.g 5.10"} onChangeText={setHeight} label="Height (ft)"/>
+        <View style={{ flex: 1 }}>
+          <Input placeholder={"e.g 5.10"} onChangeText={setHeight} label="Height (ft)" />
         </View>
       </View>
 
@@ -66,7 +77,7 @@ export default function Preference() {
       <Text style={styles.sectionTitle}>Gender</Text>
 
       <View style={styles.row}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.genderBox, gender === "male" && styles.genderSelected]}
           onPress={() => setGender("male")}
         >
@@ -74,7 +85,7 @@ export default function Preference() {
           <Text>Male</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.genderBox, gender === "female" && styles.genderSelected]}
           onPress={() => setGender("female")}
         >
@@ -82,7 +93,7 @@ export default function Preference() {
           <Text>Female</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={[styles.genderBox, gender === "other" && styles.genderSelected]}
           onPress={() => setGender("other")}
         >
@@ -94,40 +105,40 @@ export default function Preference() {
       {/* Goal */}
       <Text style={styles.sectionTitle}>What's Your Goal?</Text>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.goalCard, goal === "lose" && styles.goalSelected]}
         onPress={() => setGoal("lose")}
       >
-        <View style={styles.goalIconRed}/>
+        <View style={styles.goalIconRed} />
         <View>
           <Text style={styles.goalTitle}>Lose Weight</Text>
           <Text style={styles.goalSubtitle}>Trim down and feel lighter</Text>
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.goalCard, goal === "gain" && styles.goalSelected]}
         onPress={() => setGoal("gain")}
       >
-        <View style={styles.goalIconBlue}/>
+        <View style={styles.goalIconBlue} />
         <View>
           <Text style={styles.goalTitle}>Gain Weight</Text>
           <Text style={styles.goalSubtitle}>Build mass healthily</Text>
         </View>
       </TouchableOpacity>
 
-      <TouchableOpacity 
+      <TouchableOpacity
         style={[styles.goalCard, goal === "muscle" && styles.goalSelected]}
         onPress={() => setGoal("muscle")}
       >
-        <View style={styles.goalIconGreen}/>
+        <View style={styles.goalIconGreen} />
         <View>
           <Text style={styles.goalTitle}>Build Muscle</Text>
           <Text style={styles.goalSubtitle}>Increase strength and definition</Text>
         </View>
       </TouchableOpacity>
       <View>
-        <Button title="Continue" style={{marginTop: 25}} onPress={onContinue} />
+        <Button title="Continue" style={{ marginTop: 25 }} onPress={onContinue} />
       </View>
 
     </View>

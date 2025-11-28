@@ -14,6 +14,7 @@ export default defineSchema({
         gender: v.optional(v.string()),
         activityLevel: v.optional(v.string()),
         goal: v.optional(v.string()),
-
+        calories: v.optional(v.number()),
+        proteins: v.optional(v.number()),
     })
 })
