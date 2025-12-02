@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, Alert } from 'react-native';
 import Input from '../../components/shared/Input';
 import Button from '../../components/shared/Button';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useContext, useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../services/FirebasConfig';
@@ -46,6 +46,7 @@ export default function SignIn({ navigation }) {
 
             // Save user info in global context
             setUser(userData);
+            router.replace('/(tabs)/Home');
 
             return { success: true, user };
         } catch (error) {
