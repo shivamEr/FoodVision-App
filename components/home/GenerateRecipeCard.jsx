@@ -2,8 +2,10 @@ import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from "../../shared/Colors";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
 export default function GenerateRecipeCard() {
+  const router = useRouter();
   return (
     <LinearGradient 
     colors={[Colors.BLUE, Colors.PRIMARY]} 
@@ -14,7 +16,9 @@ export default function GenerateRecipeCard() {
         Let our AI generate personalized recipes just for you!
       </Text>
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity 
+      style={styles.button}
+      onPress={() => router.push('/generate-ai-recipe')}>
         <Text style={styles.buttonText}>Generate With AI</Text>
         <FontAwesome6 name="angle-right" size={24} color={Colors.PRIMARY} />
       </TouchableOpacity>

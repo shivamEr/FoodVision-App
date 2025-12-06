@@ -16,5 +16,12 @@ export default defineSchema({
         goal: v.optional(v.string()),
         calories: v.optional(v.number()),
         proteins: v.optional(v.number()),
+    }),
+
+    recipes: defineTable({
+        jsonData: v.any(),
+        uid: v.id('users'),
+        imageURI : v.string(),
+        recipeName : v.any()
     })
 })
