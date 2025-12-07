@@ -22,6 +22,6 @@ export default defineSchema({
         jsonData: v.any(),
         uid: v.id('users'),
         imageURI : v.string(),
-        recipeName : v.any()
+        recipeName : v.string()
     })
 })

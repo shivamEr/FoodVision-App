@@ -7,21 +7,23 @@ import Prompt from '../shared/Prompt';
 import { useMutation } from 'convex/react';
 import { api } from '../convex/_generated/api';
 import { UserContext } from '../context/UserContext';
+import { useRouter } from 'expo-router';
 
 export default function RecipeOptionList({ recipeOption }) {
     const [loading, setLoading] = useState(false);
     const CreateRecipe = useMutation(api.Recipes.CreateRecipe)
     const { user } = useContext(UserContext)
+    const router = useRouter();
 
     const onRecipeOptionSelect = async (recipe) => {
         setLoading(true);
         try {
-            const PROMPT ="RecipeName : " + recipe.recipeName + " ,Recipe Description : " + recipe.description + Prompt.GENERATE_COMPLETE_RECIPE_PROMPT;
+            const PROMPT = "RecipeName : " + recipe.recipeName + " ,Recipe Description : " + recipe.description + Prompt.GENERATE_COMPLETE_RECIPE_PROMPT;
             // console.log("Prompt : " , PROMPT)
             const AIResult = await GenerateWithAi(PROMPT);
             // Parse AI Result to Json object and make sure replace any unwanted characters
             const JSONContent = JSON.parse(AIResult.replace('```json', '').replace('```', ''));
-            console.log(JSONContent)
+            // console.log(JSONContent)
 
             // Generate RecipeImage
             // const aiImage = await GenerateImageWithAI(JSONContent.imagePrompt);
@@ -36,12 +38,20 @@ export default function RecipeOptionList({ recipeOption }) {
             })
             console.log("Saved Recipe result : ", saveRecipeResult)
 
-            // Redirect to Recipe Details screen
-        
             setLoading(false);
 
+            // Redirect to Recipe-Detail screen
+            router.push({
+                pathname: "/recipe-detail",
+                params: {
+                    recipeId: saveRecipeResult,
+                }
+            });
+
+
+
         } catch (error) {
-            // Alert.alert("AI isn't working", 'Unable to Generate Recipe!')
+            Alert.alert("AI isn't working", 'Unable to Generate Recipe!')
             console.log(error)
             setLoading(false);
         }

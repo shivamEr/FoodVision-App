@@ -20,7 +20,8 @@ export default {
 
 Requirements:
 - For each ingredient: provide an emoji icon, name, and quantity with units.
-- Provide total calories (number only) and cookTime (minutes, number).
+- Provide total calories, carbs, protien and fats (number only) and cookTime (minutes, number).
+- Description should be 20 - 30 words.
 - Choose categories from: ["Breakfast","Lunch","Dinner","Snack","Dessert","Beverage"].
 - Create a detailed realistic image prompt describing plating, lighting, angle, background, mood, and garnish.
 - Output JSON only using this schema:
@@ -32,6 +33,9 @@ Requirements:
   "category": ["string"],
   "cookTime": number,
   "imagePrompt": "string",
+  "protien": number,
+  "carbs": number,
+  "fats": number,
   "ingredients": [
     {
       "icon": "string",

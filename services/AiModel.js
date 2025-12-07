@@ -3,6 +3,7 @@ import OpenAI from "openai";
 const openai = new OpenAI({
   apiKey: process.env.EXPO_PUBLIC_OPENROUTER_API_KEY,
   baseURL: "https://openrouter.ai/api/v1",
+  dangerouslyAllowBrowser:true
 });
 
 export const calculateCaloriesAI = async (prompt) => {

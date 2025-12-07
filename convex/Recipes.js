@@ -1,21 +1,31 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 
 export const CreateRecipe = mutation({
     args: {
-        jsonData : v.any(),
+        jsonData: v.any(),
         uid: v.id('users'),
-        imageURI : v.string(),
+        imageURI: v.string(),
         recipeName: v.string()
     },
 
-    handler: async (ctx, args) =>{
+    handler: async (ctx, args) => {
         const result = await ctx.db.insert('recipes', {
             jsonData: args.jsonData,
             uid: args.uid,
             imageURI: args.imageURI,
-            recipeName: args.imageURI
+            recipeName: args.recipeName
         });
+        return result;
+    }
+})
+
+export const GetRecipeById = query({
+    args: {
+        id: v.id('recipes')
+    },
+    handler: async (ctx, args) => {
+        const result = await ctx.db.get(args.id);
         return result;
     }
 })
