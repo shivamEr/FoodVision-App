@@ -51,9 +51,11 @@ export default function RecipeOptionList({ recipeOption }) {
 
 
         } catch (error) {
-            Alert.alert("AI isn't working", 'Unable to Generate Recipe!')
             console.log(error)
             setLoading(false);
+        }
+        finally {
+            setLoading(false)
         }
     }
     return (
