@@ -1,65 +1,89 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, Alert } from 'react-native'
 import { Ionicons } from "@expo/vector-icons";
+import Colors from '../../shared/Colors'
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 
-export default function MealCard({ meal }) {
+export default function MealCard({ mealPlanInfo, refreshData }) {
+    const updateStatus = useMutation(api.MealPlan.UpdateMealPlanStatus)
+    const onCheck = async (isCompleted) => {
+        // Handle check/uncheck action here
+       const result = await updateStatus({
+            id: mealPlanInfo?.mealPlan?._id,
+            completed: isCompleted
+        });
+        console.log("Update Meal Plan Status Result:", result);
+        Alert.alert("Success", `Meal marked as ${isCompleted ? 'completed' : 'incomplete'}`) ;
+        refreshData();
+    }
     return (
-        <View style={styles.mealItem}>
-            <Image
-                source={{ uri: "https://via.placeholder.com/80" }}
-                style={styles.mealImage}
-            />
+        <View style={{
+            padding: 10,
+            borderradius: 18,
+            backgroundColor: Colors.WHITE,
+            display: 'flex',
+            flexDirection: 'row',
+            marginTop: 10
+        }}>
+            <Image source={{ uri: mealPlanInfo.recipe.imageURI }} style={{ width: 80, height: 80, borderRadius: 12, backgroundColor: "#eee" }} />
 
-            <View style={{ flex: 1 }}>
-                <View style={styles.mealMeta}>
-                    <Text style={styles.mealType}>{meal.type}</Text>
-                    <Text style={styles.dot}>•</Text>
-                    <Text style={styles.mealTime}>{meal.time}</Text>
+            <View style={{
+                flex: 1,
+                marginLeft: 15,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+            }}>
+                <View>
+                    <Text style={styles.mealTypeText}>{mealPlanInfo?.mealPlan?.mealType}</Text>
+                    <Text style={styles.recipeNameText}>{mealPlanInfo?.recipe?.recipeName}</Text>
+                    <Text style={styles.calories}>{mealPlanInfo?.recipe?.jsonData?.calories} kcal</Text>
                 </View>
-
-                <Text style={styles.mealName}>{meal.name}</Text>
-                <Text style={styles.mealCalories}>{meal.calories} kcal</Text>
+                <View>
+                    {mealPlanInfo?.mealPlan?.completed ? (
+                        <TouchableOpacity onPress={() => onCheck(false)} style={styles.checkCircle}>
+                            <Ionicons name="checkmark" size={14} color="#fff" />
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity onPress={() => onCheck(true)} style={styles.uncheckCircle} />
+                    )}
+                </View>
             </View>
-
-            {meal.completed ? (
-                <View style={styles.checkCircle}>
-                    <Ionicons name="checkmark" size={14} color="#fff" />
-                </View>
-            ) : (
-                <View style={styles.uncheckCircle} />
-            )}
         </View>
-    );
+    )
 }
 
 const styles = StyleSheet.create({
-    mealItem: {
-        backgroundColor: "#fff",
-        padding: 15,
-        borderRadius: 18,
-        flexDirection: "row",
-        alignItems: "center",
-        marginBottom: 12,
+    mealTypeText: {
+        backgroundColor: Colors.SECONDARY,
+        color: Colors.PRIMARY,
+        padding: 1,
+        paddingHorizontal: 10,
+        borderRadius: 99,
     },
-    mealImage: { width: 60, height: 60, borderRadius: 12, backgroundColor: "#eee" },
-    mealMeta: { flexDirection: "row", alignItems: "center" },
-    mealType: { fontSize: 11, color: "#0D9E71" },
-    dot: { marginHorizontal: 5, color: "#999" },
-    mealTime: { fontSize: 11, color: "#999" },
-    mealName: { fontSize: 15, fontWeight: "500", marginTop: 2 },
-    mealCalories: { fontSize: 11, color: "#666" },
+    recipeNameText: {
+        fontSize: 17,
+        fontWeight: 'bold',
+    },
+    calories: {
+        fontSize: 16,
+        fontWeight: '500',
+        marginTop: 5,
+        color: Colors.GREEN,
+    },
     checkCircle: {
-        width: 24,
-        height: 24,
+        width: 30,
+        height: 30,
         backgroundColor: "#0D9E71",
         borderRadius: 12,
         justifyContent: "center",
         alignItems: "center",
     },
     uncheckCircle: {
-        width: 24,
-        height: 24,
+        width: 30,
+        height: 30,
         borderRadius: 12,
         borderWidth: 2,
         borderColor: "#ccc",
     },
-});
+})

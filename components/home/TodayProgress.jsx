@@ -1,9 +1,32 @@
 import { View, Text, StyleSheet } from "react-native";
 import { MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
 import Colors from "../../shared/Colors";
+import { UserContext } from "../../context/UserContext";
+import { useContext } from "react";
+import { useConvex } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import moment from "moment";
+import { useEffect } from "react";
+import { useState } from "react";
 
 export default function TodayProgress({ calories = 2100 }) {
     const today = new Date().toDateString();
+    const { user } = useContext(UserContext);
+    const convex = useConvex();
+    const [totalCalories, setTotalCalories] = useState(0);
+
+    useEffect(() => {
+        GetUserCalories();
+    }, [user]);
+
+    const GetUserCalories = async () => {
+        const result = await convex.query(api.MealPlan.GetTotalCaloriesByDate, {
+            uid: user?._id,
+            date: moment().format('DD/MM/YYYY')
+        });
+        console.log("User Total Calories Today:", result);
+        setTotalCalories(result);
+    }
 
     return (
         <View style={styles.card}>
@@ -14,10 +37,16 @@ export default function TodayProgress({ calories = 2100 }) {
                 <Text style={styles.dateText}>{today}</Text>
             </View>
 
-            <Text style={styles.cardSubtitle}>1420 / {calories} kcal</Text>
+            <Text style={styles.cardSubtitle}>{totalCalories} / {user?.calories} kcal</Text>
 
             <View style={styles.progressBackground}>
-                <View style={styles.progressFill} />
+                <View style={{
+                    width: `${Math.min((totalCalories / user?.calories) * 100, 100)}%`,
+                    height: "100%",
+                    backgroundColor: Colors.PRIMARY,
+                    borderRadius: 8,
+                    opacity: 0.5
+                }} />
             </View>
 
             <View style={styles.macrosRow}>
@@ -67,13 +96,6 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginTop: 10,
         marginBottom: 15,
-    },
-    progressFill: {
-        height: "100%",
-        width: "67%",
-        backgroundColor: Colors.PRIMARY,
-        borderRadius: 8,
-        opacity:0.5
     },
 
     macrosRow: { flexDirection: "row", justifyContent: "space-between" },

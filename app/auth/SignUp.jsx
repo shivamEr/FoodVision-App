@@ -50,6 +50,7 @@ export default function SignUp({ navigation }) {
 
                 // 🔹 3. Store new user in global context
                 setUser(result);
+                Alert.alert('Success!', 'Registration Completed!')
 
                 // 🔹 4. Navigation to dashboard can go here
                 // navigation.navigate("Dashboard");

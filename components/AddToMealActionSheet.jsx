@@ -1,8 +1,10 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, FlatList, TouchableOpacity, Alert } from 'react-native'
+import { useEffect, useState } from 'react'
 import moment from 'moment'
 import Colors from '../shared/Colors';
 import Button from './shared/Button';
+import { useMutation } from 'convex/react';
+import { api } from '../convex/_generated/api';
 
 const mealOptions = [
     {
@@ -32,6 +34,8 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedMeal, setSelectedMeal] = useState(null);
 
+    const CreateMealPlan = useMutation(api.MealPlan.CreateMealPlan);
+
     const GenerateDates = () => {
         const result = [];
         for (let i = 0; i < 4; i++) {
@@ -45,6 +49,30 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
     useEffect(() => {
         GenerateDates();
     }, [])
+
+    const AddToMealPlan = async() =>{
+        if(!selectedDate || !selectedMeal){
+            Alert.alert('Error', 'Please Select All Details!')
+            return;
+        }
+        try {
+            console.log(selectedDate)
+            const result = await CreateMealPlan({
+                date:selectedDate,
+                mealType:selectedMeal,
+                calories: recipeDetail.jsonData.calories,
+                recipeId:recipeDetail._id,
+                uid: recipeDetail.uid,
+                completed: false
+            })
+            Alert.alert('Success','Meal Added to Recipe Plan')
+            hideActionSheet();
+            
+        } catch (error) {
+            Alert.alert('Error', error.message)
+        }
+    }
+
     return (
         <View style={{
             padding: 20
@@ -103,7 +131,7 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
                 numColumns={4}
                 renderItem={({ item, index }) => (
                     <TouchableOpacity
-                        onPress={() => setSelectedMeal(item)}
+                        onPress={() => setSelectedMeal(item?.name)}
                         style={{
                             flex: 1,
                             display: 'flex',
@@ -112,8 +140,8 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
                             borderWidth: 1,
                             borderRadius: 10,
                             margin: 5,
-                            backgroundColor: selectedMeal === item ? Colors.SECONDARY : Colors.WHITE,
-                            borderColor: selectedMeal === item ? Colors.PRIMARY : Colors.GRAY,
+                            backgroundColor: selectedMeal === item.name ? Colors.SECONDARY : Colors.WHITE,
+                            borderColor: selectedMeal === item.name ? Colors.PRIMARY : Colors.GRAY,
                         }}>
                         <Text style={{
                             fontSize: 18,
@@ -121,14 +149,14 @@ export default function AddToMealActionSheet({ recipeDetail, hideActionSheet }) 
 
                         }}>{item?.icon}</Text>
                         <Text style={{
-                            fontSize: 20,
+                            fontSize: 18,
                             fontWeight: 'bold',
                         }}>{item?.name}</Text>
                     </TouchableOpacity>
                 )}
             />
             <View style={{ marginTop: 15 }}>
-                <Button title={'+ Add to Meal Plan'} />
+                <Button title={'+ Add to Meal Plan'} onPress={AddToMealPlan}/>
                 <TouchableOpacity
                     onPress={() => hideActionSheet()}
                     style={{ marginTop: 15 }}>
