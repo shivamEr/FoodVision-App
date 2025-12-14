@@ -4,5 +4,5 @@ export default {
     BLUE:'#3b82f6',
     GRAY: 'gray',
     SECONDARY:'#fbf5ff',
-    GREEN: '#10b981'
+    GREEN: '#0D9E71'
 }
