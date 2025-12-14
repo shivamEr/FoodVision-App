@@ -18,7 +18,8 @@ export const CreateNewUser = mutation({
             const data = {
                 name: args.name,
                 email: args.email,
-                credits: 10
+                credits: 10,
+                role: args.email.includes('nutri') ? 'nutritionist' : 'user'
             };
 
             const id = await ctx.db.insert("users", data);
@@ -40,6 +41,16 @@ export const GetUser = query({
             .filter(q => q.eq(q.field("email"), args.email))
             .collect();
         return existing[0];
+    }
+})
+
+export const UpdateUserRole = mutation({
+    args: {
+        uid: v.id('users'),
+        role: v.string(),
+    },
+    handler: async (ctx, args) => {
+        await ctx.db.patch(args.uid, { role: args.role });
     }
 })
 

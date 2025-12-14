@@ -19,13 +19,17 @@ export default function Index() {
     const unsubscribe = onAuthStateChanged(auth, async (userInfo) => {
       try {
         console.log(userInfo?.email);
-      const userData = await convex.query(api.Users.GetUser, {
-        email: userInfo?.email
-      });
+        const userData = await convex.query(api.Users.GetUser, {
+          email: userInfo?.email
+        });
 
-      console.log("Convex signIn:", userData);
-      setUser(userData);
-      router.replace('/(tabs)/Home');
+        console.log("Convex signIn:", userData);
+        setUser(userData);
+        if (userData?.role === 'nutritionist') {
+          router.replace('/(nutritionist)/(tabs)/Dashboard');
+        } else {
+          router.replace('/(tabs)/Home');
+        }
       }
       catch (error) {
         console.error("Error fetching user data:", error);
