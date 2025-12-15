@@ -22,14 +22,29 @@ export default function NutritionistProfile() {
         });
         setProfile(result);
     };
-
+    
     const handleBookConsultation = () => {
         router.push(`/consultancy/${nutritionistId}/book`);
     };
 
+    const getNext7Days = () => {
+        const dates = [];
+        const now = new Date();
+        for (let i = 1; i <= 7; i++) {
+            const date = new Date(now);
+            date.setDate(now.getDate() + i);
+            dates.push(date.toISOString().split('T')[0]);
+        }
+        return dates;
+    };
+
+    const next7Days = getNext7Days();
+
     if (!profile) {
         return <Text>Loading...</Text>;
     }
+
+    const availableSlots = (profile.availableSlots || []).filter(s => !s.isBooked && next7Days.includes(s.date));
 
     return (
         <ScrollView style={{ flex: 1, backgroundColor: '#F7F7F7', padding: 20 }}>
@@ -52,12 +67,12 @@ export default function NutritionistProfile() {
 
             <View style={{ backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 20 }}>
                 <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Consultation Modes</Text>
-                {profile.consultationModes.offline ? (
+                {profile.consultationModes?.offline ? (
                     <Text style={{ color: Colors.PRIMARY }}>✓ Offline Consultation Available</Text>
                 ) : (
                     <Text style={{ color: 'gray' }}>✗ Offline Consultation</Text>
                 )}
-                {profile.consultationModes.online ? (
+                {profile.consultationModes?.online ? (
                     <Text style={{ color: Colors.PRIMARY }}>✓ Online Consultation Available</Text>
                 ) : (
                     <Text style={{ color: 'red' }}>Coming Soon</Text>
@@ -65,11 +80,11 @@ export default function NutritionistProfile() {
             </View>
 
             <View style={{ backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 20 }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Available Slots</Text>
-                {profile.availableSlots.filter(s => !s.isBooked).length === 0 ? (
+                <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Available Slots (Next 7 Days)</Text>
+                {availableSlots.length === 0 ? (
                     <Text style={{ color: 'gray' }}>No available slots</Text>
                 ) : (
-                    profile.availableSlots.filter(s => !s.isBooked).slice(0, 5).map((slot, index) => (
+                    availableSlots.slice(0, 10).map((slot, index) => (
                         <Text key={index}>{slot.date} at {slot.time}</Text>
                     ))
                 )}

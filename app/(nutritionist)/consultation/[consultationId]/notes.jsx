@@ -41,7 +41,9 @@ export default function SessionNotes() {
                 notes,
             });
             Alert.alert('Success', 'Notes saved and session completed');
-            router.back();
+            // router.back();
+            // Instead of back, go to plan creation
+            router.push(`/consultation/${consultationId}/plan`);
         } catch (error) {
             Alert.alert('Error', error.message);
         }

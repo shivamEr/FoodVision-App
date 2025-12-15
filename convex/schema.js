@@ -32,10 +32,16 @@ export default defineSchema({
         degree: v.string(),
         dietPhilosophy: v.string(),
         experienceYears: v.number(),
+        specialization: v.array(v.string()),
 
         clinicAddress: v.optional(v.string()),
 
-        consultationModes: v.string(),
+        consultationModes: v.object({
+            online: v.boolean(),
+            offline: v.boolean(),
+        }),
+        languagesSpoken: v.array(v.string()),
+        consultationFee: v.number(),
 
         availableSlots: v.array(
             v.object({
@@ -48,6 +54,7 @@ export default defineSchema({
         isVerified: v.boolean(),
         isActive: v.boolean(),
         createdAt: v.number(),
+        updatedAt: v.number(),
     }),
 
 

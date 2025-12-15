@@ -29,16 +29,16 @@ export const createConsultation = mutation({
         await ctx.db.patch(args.nutritionistId, { availableSlots: updatedSlots });
 
         // Create consultation (meetLink saved if provided)
-        // const consultationId = await ctx.db.insert("consultations", {
-        //     userId: args.userId,
-        //     nutritionistId: args.nutritionistId,
-        //     consultationType: args.consultationType,
-        //     slot: args.slot,
-        //     meetLink: args.meetLink || null,
-        //     status: "upcoming",
-        //     paymentMode: "pay_on_site",
-        //     createdAt: Date.now(),
-        // });
+        const consultationId = await ctx.db.insert("consultations", {
+            userId: args.userId,
+            nutritionistId: args.nutritionistId,
+            consultationType: args.consultationType,
+            slot: args.slot,
+            meetLink: args.meetLink || "coming soon",
+            status: "upcoming",
+            paymentMode: "pay_on_site",
+            createdAt: Date.now(),
+        });
 
         return consultationId;
     }
@@ -97,6 +97,7 @@ export const getNutritionistConsultations = query({
                         name: user.name,
                         email: user.email,
                         picture: user.picture,
+                        _id: user._id,
                     }
                 };
             })
@@ -145,6 +146,7 @@ export const getConsultationDetails = query({
                 }
             },
             user: {
+                _id: user._id,
                 name: user.name,
                 email: user.email,
                 picture: user.picture,

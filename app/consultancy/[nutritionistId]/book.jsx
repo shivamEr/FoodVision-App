@@ -23,7 +23,7 @@ export default function BookConsultation() {
     const getProfile = async () => {
         const result = await convex.query(api.Nutritionists.getNutritionistProfile, { nutritionistId });
         setProfile(result);
-        setConsultationType(result.consultationModes.offline ? 'offline' : (result.consultationModes.online ? 'online' : 'offline'));
+        setConsultationType(result.consultationModes?.offline ? 'offline' : (result.consultationModes?.online ? 'online' : 'offline'));
     };
 
     const handleSelectSlot = (slot) => {
@@ -51,9 +51,21 @@ export default function BookConsultation() {
         }
     };
 
+    const getNext7Days = () => {
+        const dates = [];
+        const now = new Date();
+        for (let i = 1; i <= 7; i++) {
+            const date = new Date(now);
+            date.setDate(now.getDate() + i);
+            dates.push(date.toISOString().split('T')[0]);
+        }
+        return dates;
+    };
+
     if (!profile) return <Text>Loading...</Text>;
 
-    const available = profile.availableSlots.filter(s => !s.isBooked);
+    const next7Days = getNext7Days();
+    const available = (profile.availableSlots || []).filter(s => !s.isBooked && next7Days.includes(s.date));
 
     return (
         <View style={{ flex: 1, backgroundColor: '#F7F7F7', padding: 20 }}>
@@ -65,9 +77,9 @@ export default function BookConsultation() {
                     <TouchableOpacity onPress={() => setConsultationType('offline')} style={{ marginRight: 10 }}>
                         <Text style={{ color: consultationType === 'offline' ? Colors.PRIMARY : 'gray' }}>Offline</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity disabled={!profile.consultationModes.online} onPress={() => setConsultationType('online')}>
-                        <Text style={{ color: consultationType === 'online' ? Colors.PRIMARY : (profile.consultationModes.online ? 'gray' : 'red') }}>
-                            {profile.consultationModes.online ? 'Online' : 'Online (Coming Soon)'}
+                    <TouchableOpacity disabled={!profile.consultationModes?.online} onPress={() => setConsultationType('online')}>
+                        <Text style={{ color: consultationType === 'online' ? Colors.PRIMARY : (profile.consultationModes?.online ? 'gray' : 'red') }}>
+                            {profile.consultationModes?.online ? 'Online' : 'Online (Coming Soon)'}
                         </Text>
                     </TouchableOpacity>
                 </View>

@@ -19,8 +19,11 @@ export default function Profile() {
         degree: '',
         dietPhilosophy: '',
         experienceYears: '',
+        specialization: [],
         clinicAddress: '',
         consultationModes: { online: false, offline: true },
+        languagesSpoken: [],
+        consultationFee: '',
         availableSlots: [],
     });
 
@@ -43,8 +46,11 @@ export default function Profile() {
                 degree: nutri.degree || '',
                 dietPhilosophy: nutri.dietPhilosophy || '',
                 experienceYears: nutri.experienceYears?.toString() || '',
+                specialization: nutri.specialization || [],
                 clinicAddress: nutri.clinicAddress || '',
                 consultationModes: nutri.consultationModes,
+                languagesSpoken: nutri.languagesSpoken || [],
+                consultationFee: nutri.consultationFee?.toString() || '',
                 availableSlots: nutri.availableSlots,
             });
         } else {
@@ -59,12 +65,15 @@ export default function Profile() {
                     nutritionistId: profile._id,
                     ...form,
                     experienceYears: parseInt(form.experienceYears),
+                    consultationFee: parseInt(form.consultationFee),
                 });
             } else {
+                const { availableSlots, ...createForm } = form;
                 await convex.mutation(api.Nutritionists.createNutritionistProfile, {
                     userId: user._id,
-                    ...form,
+                    ...createForm,
                     experienceYears: parseInt(form.experienceYears),
+                    consultationFee: parseInt(form.consultationFee),
                 });
             }
             Alert.alert('Success', 'Profile saved');
@@ -133,6 +142,41 @@ export default function Profile() {
                         value={form.clinicAddress}
                         onChangeText={(value) => updateForm('clinicAddress', value)}
                     />
+                    <TextInput
+                        style={{ backgroundColor: 'white', padding: 10, borderRadius: 5, marginBottom: 10 }}
+                        placeholder="Specialization (comma separated)"
+                        value={form.specialization.join(', ')}
+                        onChangeText={(value) => updateForm('specialization', value.split(', ').map(s => s.trim()))}
+                    />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                        <Text>Offline Consultation: </Text>
+                        <TouchableOpacity onPress={() => updateForm('consultationModes', { ...form.consultationModes, offline: !form.consultationModes.offline })}>
+                            <Text style={{ color: form.consultationModes.offline ? Colors.PRIMARY : 'gray' }}>
+                                {form.consultationModes.offline ? '✓' : '✗'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 10 }}>
+                        <Text>Online Consultation: </Text>
+                        <TouchableOpacity onPress={() => updateForm('consultationModes', { ...form.consultationModes, online: !form.consultationModes.online })}>
+                            <Text style={{ color: form.consultationModes.online ? Colors.PRIMARY : 'gray' }}>
+                                {form.consultationModes.online ? '✓' : '✗'}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TextInput
+                        style={{ backgroundColor: 'white', padding: 10, borderRadius: 5, marginBottom: 10 }}
+                        placeholder="Languages Spoken (comma separated)"
+                        value={form.languagesSpoken.join(', ')}
+                        onChangeText={(value) => updateForm('languagesSpoken', value.split(', ').map(s => s.trim()))}
+                    />
+                    <TextInput
+                        style={{ backgroundColor: 'white', padding: 10, borderRadius: 5, marginBottom: 10 }}
+                        placeholder="Consultation Fee"
+                        value={form.consultationFee}
+                        onChangeText={(value) => updateForm('consultationFee', value)}
+                        keyboardType="numeric"
+                    />
                     <Button title="Save Profile" onPress={handleSave} />
                 </>
             ) : (
@@ -143,7 +187,11 @@ export default function Profile() {
                         <Text>Degree: {profile.degree}</Text>
                         <Text>Diet Philosophy: {profile.dietPhilosophy}</Text>
                         <Text>Experience: {profile.experienceYears} years</Text>
+                        <Text>Specialization: {profile.specialization?.join(', ')}</Text>
                         <Text>Clinic: {profile.clinicAddress}</Text>
+                        <Text>Consultation Modes: {profile.consultationModes?.offline ? 'Offline' : ''} {profile.consultationModes?.online ? 'Online' : ''}</Text>
+                        <Text>Languages: {profile.languagesSpoken?.join(', ')}</Text>
+                        <Text>Fee: ${profile.consultationFee}</Text>
                     </>
                 )
             )}

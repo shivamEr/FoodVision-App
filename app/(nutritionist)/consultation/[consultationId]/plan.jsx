@@ -73,7 +73,7 @@ export default function CreateDietPlan() {
                 });
             }
             Alert.alert('Success', 'Diet plan saved');
-            router.back();
+            router.replace('/(nutritionist)/(tabs)/Dashboard');
         } catch (error) {
             Alert.alert('Error', error.message);
         }
