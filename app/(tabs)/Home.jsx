@@ -1,4 +1,4 @@
-import { Text, ScrollView, View } from "react-native";
+import { Text, ScrollView, View, TouchableOpacity } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../context/UserContext";
 import { useRouter } from "expo-router";
@@ -18,7 +18,7 @@ export default function Home() {
     const { user } = useContext(UserContext);
     const router = useRouter();
     const convex = useConvex();
-    const [mealPlan, setMealPlan] = useState(null);
+    const [mealPlan, setMealPlan] = useState([]);
 
     useEffect(() => {
         if (!user?.weight) {
@@ -32,7 +32,7 @@ export default function Home() {
             date: moment().format('DD/MM/YYYY'),
             uid: user?._id,
         })
-        console.log("Today's Meal Plan:",result);
+        console.log("Today's Meal Plan:", result);
         setMealPlan(result);
     }
 
@@ -45,12 +45,27 @@ export default function Home() {
 
             <GenerateRecipeCard />
 
+            <TouchableOpacity
+                style={{
+                    backgroundColor: Colors.PRIMARY,
+                    padding: 15,
+                    borderRadius: 10,
+                    marginBottom: 20,
+                    alignItems: 'center',
+                }}
+                onPress={() => router.push('/consultancy')}
+            >
+                <Text style={{ color: 'white', fontSize: 16, fontWeight: 'bold' }}>
+                    Consult a Nutritionist
+                </Text>
+            </TouchableOpacity>
+
             <Text style={{ fontSize: 18, fontWeight: "600", marginBottom: 10, color: "#222" }}>
                 Today’s Meals
             </Text>
 
             {
-                !mealPlan ?
+                mealPlan.length == 0 ?
                     <View style={{
                         display: "flex",
                         alignItems: "center",

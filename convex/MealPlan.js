@@ -31,7 +31,29 @@ export const GetTodaysMealPlan = query({
     },
 
     handler: async (ctx, args) => {
-        // Fetch meal plans filtered by uid + date
+        // Check for active expert diet plan
+        const expertPlan = await ctx.db
+            .query("expertDietPlans")
+            .filter(q => q.and(
+                q.eq(q.field("userId"), args.uid),
+                q.eq(q.field("isActive"), true)
+            ))
+            .collect();
+
+        if (expertPlan.length > 0) {
+            // Return expert plan meals
+            return expertPlan[0].meals.map(meal => ({
+                mealPlan: null, // No mealPlan entry
+                recipe: {
+                    recipeName: meal.name,
+                    jsonData: { calories: meal.calories, macros: meal.macros },
+                    imageURI: "", // Placeholder
+                },
+                isExpert: true,
+            }));
+        }
+
+        // Fetch AI meal plans filtered by uid + date
         const mealPlans = await ctx.db
             .query("mealPlan")
             .filter((q) =>
@@ -50,6 +72,7 @@ export const GetTodaysMealPlan = query({
                 return {
                     mealPlan,
                     recipe,
+                    isExpert: false,
                 };
             })
         );

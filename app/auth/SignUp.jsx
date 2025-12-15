@@ -1,7 +1,7 @@
 import { View, Text, Image, StyleSheet, Alert } from 'react-native';
 import Input from '../../components/shared/Input';
 import Button from '../../components/shared/Button';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { useContext, useState } from 'react';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../services/FirebasConfig';
@@ -14,6 +14,7 @@ export default function SignUp({ navigation }) {
     const [name, setName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const router = useRouter();
 
     // Convex mutation to create user record in database
     const createNewUser = useMutation(api.Users.CreateNewUser);
@@ -51,6 +52,7 @@ export default function SignUp({ navigation }) {
                 // 🔹 3. Store new user in global context
                 setUser(result);
                 Alert.alert('Success!', 'Registration Completed!')
+                router.push('/auth/SignIn')
 
                 // 🔹 4. Navigation to dashboard can go here
                 // navigation.navigate("Dashboard");

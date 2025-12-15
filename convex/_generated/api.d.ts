@@ -8,8 +8,13 @@
  * @module
  */
 
+import type * as Consultations from "../Consultations.js";
+import type * as ExpertDietPlans from "../ExpertDietPlans.js";
 import type * as MealPlan from "../MealPlan.js";
+import type * as Nutritionists from "../Nutritionists.js";
+import type * as PreConsultationForms from "../PreConsultationForms.js";
 import type * as Recipes from "../Recipes.js";
+import type * as Sessions from "../Sessions.js";
 import type * as Users from "../Users.js";
 
 import type {
@@ -19,8 +24,13 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  Consultations: typeof Consultations;
+  ExpertDietPlans: typeof ExpertDietPlans;
   MealPlan: typeof MealPlan;
+  Nutritionists: typeof Nutritionists;
+  PreConsultationForms: typeof PreConsultationForms;
   Recipes: typeof Recipes;
+  Sessions: typeof Sessions;
   Users: typeof Users;
 }>;
 

@@ -32,8 +32,8 @@ export default function Index() {
         }
       }
       catch (error) {
-        console.error("Error fetching user data:", error);
-        // router.replace('/auth/SignIn');
+        // console.error("Error fetching user data:", error);
+        router.replace('/auth/SignIn');
       }
     })
 
