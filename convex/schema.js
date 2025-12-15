@@ -35,10 +35,7 @@ export default defineSchema({
 
         clinicAddress: v.optional(v.string()),
 
-        consultationModes: v.object({
-            online: v.boolean(),
-            offline: v.boolean(),
-        }),
+        consultationModes: v.string(),
 
         availableSlots: v.array(
             v.object({

@@ -29,16 +29,16 @@ export const createConsultation = mutation({
         await ctx.db.patch(args.nutritionistId, { availableSlots: updatedSlots });
 
         // Create consultation (meetLink saved if provided)
-        const consultationId = await ctx.db.insert("consultations", {
-            userId: args.userId,
-            nutritionistId: args.nutritionistId,
-            consultationType: args.consultationType,
-            slot: args.slot,
-            meetLink: args.meetLink || null,
-            status: "upcoming",
-            paymentMode: "pay_on_site",
-            createdAt: Date.now(),
-        });
+        // const consultationId = await ctx.db.insert("consultations", {
+        //     userId: args.userId,
+        //     nutritionistId: args.nutritionistId,
+        //     consultationType: args.consultationType,
+        //     slot: args.slot,
+        //     meetLink: args.meetLink || null,
+        //     status: "upcoming",
+        //     paymentMode: "pay_on_site",
+        //     createdAt: Date.now(),
+        // });
 
         return consultationId;
     }

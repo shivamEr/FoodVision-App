@@ -40,7 +40,10 @@ export default function BookConsultation() {
                 userId: user._id,
                 nutritionistId,
                 consultationType,
-                slot: selectedSlot,
+                slot: {
+                    date: selectedSlot.date,
+                    time: selectedSlot.time
+                },
             });
             router.replace(`/consultancy/confirmation/${consultationId}`);
         } catch (error) {
