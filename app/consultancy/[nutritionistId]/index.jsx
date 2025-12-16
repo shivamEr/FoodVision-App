@@ -47,50 +47,76 @@ export default function NutritionistProfile() {
     const availableSlots = (profile.availableSlots || []).filter(s => !s.isBooked && next7Days.includes(s.date));
 
     return (
-        <ScrollView style={{ flex: 1, backgroundColor: '#F7F7F7', padding: 20 }}>
-            <View style={{ alignItems: 'center', marginBottom: 20 }}>
+        <ScrollView style={{ flex: 1, backgroundColor: '#F7F7F7' }} showsVerticalScrollIndicator={false}>
+            <View style={{ alignItems: 'center', padding: 20, backgroundColor: 'white', marginBottom: 10 }}>
                 <Image
-                    source={{ uri: profile.user.picture || 'https://via.placeholder.com/100' }}
-                    style={{ width: 100, height: 100, borderRadius: 50 }}
+                    source={{ uri: profile.user.picture || 'https://via.placeholder.com/120' }}
+                    style={{ width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: Colors.PRIMARY }}
                 />
-                <Text style={{ fontSize: 24, fontWeight: 'bold', marginTop: 10 }}>{profile.user.name}</Text>
-                <Text style={{ fontSize: 16, color: 'gray' }}>{profile.degree}</Text>
+                <Text style={{ fontSize: 26, fontWeight: 'bold', marginTop: 15, color: '#333' }}>{profile.user.name}</Text>
+                <Text style={{ fontSize: 18, color: Colors.PRIMARY, fontWeight: '600' }}>{profile.degree}</Text>
+                <Text style={{ fontSize: 14, color: 'gray', marginTop: 5 }}>{profile.experienceYears} years experience</Text>
             </View>
 
-            <View style={{ backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 20 }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>About</Text>
-                <Text>{profile.bio}</Text>
-                <Text style={{ marginTop: 10 }}>Experience: {profile.experienceYears} years</Text>
-                <Text>Diet Philosophy: {profile.dietPhilosophy}</Text>
-                {profile.clinicAddress && <Text>Clinic: {profile.clinicAddress}</Text>}
+            <View style={{ paddingHorizontal: 20 }}>
+
+            <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 15, marginBottom: 15, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 5, elevation: 3 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 15, color: '#333' }}>About</Text>
+                <Text style={{ fontSize: 16, lineHeight: 24, color: '#555' }}>{profile.bio}</Text>
+                <View style={{ marginTop: 15 }}>
+                    <Text style={{ fontSize: 16, fontWeight: '600', color: '#333' }}>Experience: <Text style={{ fontWeight: 'normal' }}>{profile.experienceYears} years</Text></Text>
+                    <Text style={{ fontSize: 16, fontWeight: '600', color: '#333', marginTop: 5 }}>Philosophy: <Text style={{ fontWeight: 'normal' }}>{profile.dietPhilosophy}</Text></Text>
+                    {profile.clinicAddress && <Text style={{ fontSize: 16, fontWeight: '600', color: '#333', marginTop: 5 }}>Clinic: <Text style={{ fontWeight: 'normal' }}>{profile.clinicAddress}</Text></Text>}
+                </View>
             </View>
 
-            <View style={{ backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 20 }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Consultation Modes</Text>
-                {profile.consultationModes?.offline ? (
-                    <Text style={{ color: Colors.PRIMARY }}>✓ Offline Consultation Available</Text>
-                ) : (
-                    <Text style={{ color: 'gray' }}>✗ Offline Consultation</Text>
-                )}
-                {profile.consultationModes?.online ? (
-                    <Text style={{ color: Colors.PRIMARY }}>✓ Online Consultation Available</Text>
-                ) : (
-                    <Text style={{ color: 'red' }}>Coming Soon</Text>
-                )}
+            <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 15, marginBottom: 15, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 5, elevation: 3 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 15, color: '#333' }}>Consultation Modes</Text>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                    <View style={{ alignItems: 'center' }}>
+                        {profile.consultationModes?.offline ? (
+                            <View style={{ backgroundColor: Colors.GREEN, width: 50, height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center', marginBottom: 5 }}>
+                                <Text style={{ color: 'white', fontSize: 24 }}>✓</Text>
+                            </View>
+                        ) : (
+                            <View style={{ backgroundColor: '#ddd', width: 50, height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center', marginBottom: 5 }}>
+                                <Text style={{ color: 'gray', fontSize: 24 }}>✗</Text>
+                            </View>
+                        )}
+                        <Text style={{ fontSize: 14, color: profile.consultationModes?.offline ? Colors.GREEN : 'gray' }}>Offline</Text>
+                    </View>
+                    <View style={{ alignItems: 'center' }}>
+                        {profile.consultationModes?.online ? (
+                            <View style={{ backgroundColor: Colors.GREEN, width: 50, height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center', marginBottom: 5 }}>
+                                <Text style={{ color: 'white', fontSize: 24 }}>✓</Text>
+                            </View>
+                        ) : (
+                            <View style={{ backgroundColor: '#ddd', width: 50, height: 50, borderRadius: 25, justifyContent: 'center', alignItems: 'center', marginBottom: 5 }}>
+                                <Text style={{ color: 'gray', fontSize: 24 }}>✗</Text>
+                            </View>
+                        )}
+                        <Text style={{ fontSize: 14, color: profile.consultationModes?.online ? Colors.GREEN : 'gray' }}>Online</Text>
+                    </View>
+                </View>
             </View>
 
-            <View style={{ backgroundColor: 'white', padding: 15, borderRadius: 10, marginBottom: 20 }}>
-                <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 10 }}>Available Slots (Next 7 Days)</Text>
+            <View style={{ backgroundColor: 'white', padding: 20, borderRadius: 15, marginBottom: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 5, elevation: 3 }}>
+                <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 15, color: '#333' }}>Available Slots (Next 7 Days)</Text>
                 {availableSlots.length === 0 ? (
-                    <Text style={{ color: 'gray' }}>No available slots</Text>
+                    <Text style={{ color: 'gray', fontSize: 16 }}>No available slots at the moment</Text>
                 ) : (
-                    availableSlots.slice(0, 10).map((slot, index) => (
-                        <Text key={index}>{slot.date} at {slot.time}</Text>
-                    ))
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {availableSlots.slice(0, 10).map((slot, index) => (
+                            <View key={index} style={{ backgroundColor: Colors.SECONDARY, paddingHorizontal: 12, paddingVertical: 6, borderRadius: 20, margin: 4 }}>
+                                <Text style={{ fontSize: 14, color: Colors.PRIMARY }}>{slot.date} {slot.time}</Text>
+                            </View>
+                        ))}
+                    </View>
                 )}
             </View>
 
             <Button title="Book Consultation" onPress={handleBookConsultation} />
-        </ScrollView>
+        </View>
+    </ScrollView>
     );
 }

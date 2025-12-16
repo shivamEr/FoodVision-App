@@ -27,8 +27,10 @@ export default function Index() {
         setUser(userData);
         if (userData?.role === 'nutritionist') {
           router.replace('/(nutritionist)/(tabs)/Dashboard');
-        } else {
+        } else if(userData?.role === 'user') {
           router.replace('/(tabs)/Home');
+        } else {
+          router.replace('/auth/SignUp')
         }
       }
       catch (error) {
