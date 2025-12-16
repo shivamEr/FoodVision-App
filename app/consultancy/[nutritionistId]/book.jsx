@@ -89,6 +89,10 @@ export default function BookConsultation() {
                     </View>
                 </View>
 
+                <View style={{ marginVertical:10 }}>
+                    <Button title="Confirm Booking" onPress={handleBook} />
+                </View>
+
                 <Text style={{ fontSize: 20, fontWeight: 'bold', color: '#333', marginBottom: 15 }}>Available Slots</Text>
                 {available.length === 0 ? (
                     <View style={{ backgroundColor: 'white', padding: 40, borderRadius: 15, alignItems: 'center', shadowColor: '#000', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 5, elevation: 3 }}>
@@ -101,8 +105,8 @@ export default function BookConsultation() {
                         renderItem={({ item }) => (
                             <TouchableOpacity onPress={() => handleSelectSlot(item)} style={{
                                 backgroundColor: selectedSlot === item ? Colors.PRIMARY : 'white',
-                                padding: 20,
-                                marginBottom: 10,
+                                padding: 15,
+                                margin: 5,
                                 borderRadius: 12,
                                 shadowColor: '#000',
                                 shadowOffset: { width: 0, height: 2 },
@@ -110,21 +114,23 @@ export default function BookConsultation() {
                                 shadowRadius: 5,
                                 elevation: 3,
                                 borderWidth: selectedSlot === item ? 2 : 0,
-                                borderColor: Colors.PRIMARY
+                                borderColor: Colors.PRIMARY,
+                                flex: 1,
+                                minWidth: 100,
+                                alignItems: 'center'
                             }}>
-                                <Text style={{ color: selectedSlot === item ? 'white' : '#333', fontSize: 16, fontWeight: '600' }}>{item.date}</Text>
-                                <Text style={{ color: selectedSlot === item ? 'white' : '#666', fontSize: 14 }}>{item.time}</Text>
+                                <Text style={{ color: selectedSlot === item ? 'white' : '#333', fontSize: 14, fontWeight: '600' }}>{item.date}</Text>
+                                <Text style={{ color: selectedSlot === item ? 'white' : '#666', fontSize: 12 }}>{item.time}</Text>
                             </TouchableOpacity>
                         )}
                         keyExtractor={(item, idx) => idx.toString()}
                         showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingBottom: 20 }}
+                        contentContainerStyle={{ paddingBottom: 100 }}
+                        numColumns={3}
                     />
                 )}
 
-                <View style={{ marginTop: 20, marginBottom: 40 }}>
-                    <Button title="Confirm Booking" onPress={handleBook} />
-                </View>
+                
             </View>
         </View>
     );

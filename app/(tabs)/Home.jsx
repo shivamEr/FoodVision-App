@@ -22,7 +22,10 @@ export default function Home() {
     const [consultations, setConsultations] = useState([]);
 
     useEffect(() => {
-        if (!user?.weight) {
+        if(!user){
+            router.replace('/auth/SignIn')
+        }
+        else if (!user?.weight) {
             router.replace("/preferences");
         }
         GetTodaysMealPlan();

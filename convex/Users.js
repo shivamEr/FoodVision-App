@@ -76,3 +76,29 @@ export const UpdateUserPref = mutation({
         return result;
     }
 })
+
+export const UpdateUserProfile = mutation({
+    args: {
+        uid: v.id("users"),
+        name: v.optional(v.string()),
+        email: v.optional(v.string()),
+        age: v.optional(v.string()),
+        height: v.optional(v.string()),
+        weight: v.optional(v.string()),
+        gender: v.optional(v.string()),
+        goal: v.optional(v.string()),
+    },
+    handler: async (ctx, args) => {
+        const updateData = {};
+        if (args.name !== undefined) updateData.name = args.name;
+        if (args.email !== undefined) updateData.email = args.email;
+        if (args.age !== undefined) updateData.age = args.age;
+        if (args.height !== undefined) updateData.height = args.height;
+        if (args.weight !== undefined) updateData.weight = args.weight;
+        if (args.gender !== undefined) updateData.gender = args.gender;
+        if (args.goal !== undefined) updateData.goal = args.goal;
+
+        await ctx.db.patch(args.uid, updateData);
+        return updateData;
+    }
+})
