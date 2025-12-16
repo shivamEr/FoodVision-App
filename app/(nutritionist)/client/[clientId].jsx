@@ -25,7 +25,7 @@ export default function ClientProfile() {
 
     const getClientData = async () => {
         // Get user details
-        const userDetails = await convex.query(api.Users.GetUser, { email: '' }); // Wait, need to get by id
+        // const userDetails = await convex.query(api.Users.GetUser, { email: '' }); // Wait, need to get by id
         // Actually, since consultations have user, but to get full user, perhaps query users
         // For simplicity, assume we have user from consultations
 
